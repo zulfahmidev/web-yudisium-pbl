@@ -1,18 +1,17 @@
 <template>
   <div class="container m-auto">
-    <modal v-if="showModal" @hide="showModal=false;editData={}" :data="editData" @save="onSave"></modal>
-    <input type="text">
+    <modalform v-if="showModal" @hide="showModal=false;editData={}" :data="editData" @save="onSave"></modalform>
+    <modalparticipants v-if="selectedGelombang != null" id_gelombang="selectedGelombang" @hide="selectedGelombang=null" ></modalparticipants>
     <div class="shadow rounded bg-white overflow-hidden">
       <div class="p-5 bg-yellow-200 border-b border-yellow-500 text-yellow-800">
         <ul class="flex divide-x divide-yellow-600 a">
-          <li class="px-3 hover:underline uppercase font-bold"><a href="">Kelola Gelombang</a></li>
-          <li class="px-3 hover:underline uppercase"><a href="">Laporan Pendaftaran</a></li>
+          <li class="px-3 uppercase font-bold">Kelola Gelombang</li>
         </ul>
       </div>
       <div class="p-5">
         <div class="flex justify-between mb-3 items-end">
           <div class="">Tabel daftar gelombang:</div>
-          <button class="border border-blue-300 bg-blue-100 rounded px-2 py-1 text-blue-600 hover:bg-blue-200 hover:border-blue-400" @click="showModal=true">Tambah Gelombang</button>
+          <!-- <button class="border border-blue-300 bg-blue-100 rounded px-2 py-1 text-blue-600 hover:bg-blue-200 hover:border-blue-400" @click="showModal=true">Tambah Gelombang</button> -->
         </div>
         <table class="table-auto w-full border-collapse">
           <tr class="bg-yellow-200 border-b border-yellow-500 text-yellow-800">
@@ -28,14 +27,15 @@
           </tr>
           <tr v-for="(v, i) in waves" :key="i" class="even:bg-slate-50 odd:bg-slate-100">
             <td class="p-3">{{ i+1 }}</td>
-            <td class="p-3">{{ v.name }}</td>
+            <td class="p-3 uppercase">{{ v.name }}</td>
             <td class="p-3">{{ dateFormat(v.register_started_at) }}</td>
             <td class="p-3">{{ dateFormat(v.register_ended_at) }}</td>
             <td class="p-3">{{ dateFormat(v.event_at) }}</td>
             <td>
               <div class="flex">
                 <button class="bg-green-100 border-y border-l rounded-l border-green-300 text-green-700 p-2 text-sm hover:bg-green-200 hover:border-green-400" @click="showEditModal(v.id)">UBAH</button>
-                <button class="bg-red-100 border-y border-r rounded-r border-red-300 text-red-700 p-2 text-sm hover:bg-red-200 hover:border-red-400">HAPUS</button>
+                <!-- <button class="bg-red-100 border-y border-red-300 text-red-700 p-2 text-sm hover:bg-red-200 hover:border-red-400">HAPUS</button> -->
+                <NuxtLink class="bg-yellow-100 border-y border-r rounded-r border-yellow-300 text-yellow-700 p-2 text-sm hover:bg-yellow-200 hover:border-yellow-400" :to="`/participants/${v.name}`">PESERTA</NuxtLink>
               </div>
             </td>
           </tr>
@@ -56,11 +56,12 @@ export default {
       showModal: false,
       db: useFirestore(),
       waves: [],
-      editData: {}
+      editData: {},
+      selectedGelombang: null,
     }
   },
-  mounted() {
-    this.waves = useCollection(query(this.getCollection(), orderBy('created_at', 'desc')))
+  async mounted() {
+    this.waves = useCollection(query(this.getCollection(), orderBy('name', 'asc')))
   },
   methods: {
     getCollection() {
@@ -72,6 +73,9 @@ export default {
         return `${this.addZero(date.getDate())}-${this.addZero(date.getMonth())}-${date.getFullYear()}`;
       }
       return '';
+    },
+    showParticipants(id) {
+      this.$router.push({path: '/participants', params: {id: id}})
     },
     addZero(number) {
       if (number < 10 && number >= 0) return `0`+number
