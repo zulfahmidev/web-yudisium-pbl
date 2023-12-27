@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-yellow-50 py-5 h-screen overflow-auto">
+  <div class="">
     <NuxtPage></NuxtPage>
   </div>
 </template>

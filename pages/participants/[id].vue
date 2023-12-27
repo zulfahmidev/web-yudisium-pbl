@@ -1,37 +1,39 @@
 <template>
-  <div class="container m-auto">
-    <modalunggahan v-if="selectedUser" :data="selectedUser" @hide="selectedUser=null"></modalunggahan>
-    <div class="shadow rounded bg-white overflow-hidden">
-      <div class="p-5 bg-yellow-200 border-b border-yellow-500 text-yellow-800">
-        <ul class="flex divide-x divide-yellow-600">
-          <li class="px-3 hover:underline uppercase cursor-pointer" @click="$router.back()">KEMBALI</li>
-          <li class="px-3 uppercase font-bold">{{ title }}</li>
-        </ul>
-      </div>
-      <div class="p-5">
-        <div class="flex justify-between mb-3 items-end">
-          <div class="">Daftar Peserta:</div>
+  <div class="bg-yellow-50 py-5 h-screen overflow-auto">
+    <div class="container m-auto">
+      <modalunggahan v-if="selectedUser" :data="selectedUser" @hide="selectedUser=null"></modalunggahan>
+      <div class="shadow rounded bg-white overflow-hidden">
+        <div class="p-5 bg-yellow-200 border-b border-yellow-500 text-yellow-800">
+          <ul class="flex divide-x divide-yellow-600">
+            <li class="px-3 hover:underline uppercase cursor-pointer" @click="$router.back()">KEMBALI</li>
+            <li class="px-3 uppercase font-bold">{{ title }}</li>
+          </ul>
         </div>
-        <table class="table-auto w-full border-collapse">
-          <tr class="bg-yellow-200 border-b border-yellow-500 text-yellow-800">
-            <td class="p-3">#</td>
-            <td class="p-3">Nim</td>
-            <td class="p-3">Nama</td>
-            <td class="p-3">Email</td>
-            <td class="p-3">Actions</td>
-          </tr>
-          <tr v-for="(v, i) in users" :key="i" class="even:bg-slate-50 odd:bg-slate-100">
-            <td class="p-3">{{ i+1 }}</td>
-            <td class="p-3">{{ v.nim }}</td>
-            <td class="p-3">{{ v.nama }}</td>
-            <td class="p-3">{{ v.email }}</td>
-            <td>
-              <div class="flex">
-                <button class="bg-yellow-100 border rounded border-yellow-300 text-yellow-700 p-2 text-sm hover:bg-yellow-200 hover:border-yellow-400" @click="selectedUser=v.dataFile">UNGGAHAN</button>
-              </div>
-            </td>
-          </tr>
-        </table>
+        <div class="p-5">
+          <div class="flex justify-between mb-3 items-end">
+            <div class="">Daftar Peserta:</div>
+          </div>
+          <table class="table-auto w-full border-collapse">
+            <tr class="bg-yellow-200 border-b border-yellow-500 text-yellow-800">
+              <td class="p-3">#</td>
+              <td class="p-3">Nim</td>
+              <td class="p-3">Nama</td>
+              <td class="p-3">Email</td>
+              <td class="p-3">Actions</td>
+            </tr>
+            <tr v-for="(v, i) in users" :key="i" class="even:bg-slate-50 odd:bg-slate-100">
+              <td class="p-3">{{ i+1 }}</td>
+              <td class="p-3">{{ v.nim }}</td>
+              <td class="p-3">{{ v.nama }}</td>
+              <td class="p-3">{{ v.email }}</td>
+              <td>
+                <div class="flex">
+                  <button class="bg-yellow-100 border rounded border-yellow-300 text-yellow-700 p-2 text-sm hover:bg-yellow-200 hover:border-yellow-400" @click="selectedUser=v.dataFile">UNGGAHAN</button>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -51,6 +53,11 @@ export default {
     }
   },
   async mounted() {
+    let isLogged = localStorage.getItem('login')
+    if (!isLogged) {
+      this.$router.replace({path: '/login'})
+      return false;
+    }
     await this.getUsers()
   },
   methods: {
