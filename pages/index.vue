@@ -2,12 +2,11 @@
   <div class="bg-yellow-50 py-5 h-screen overflow-auto">
     <div class="container m-auto">
       <modalform v-if="showModal" @hide="showModal=false;editData={}" :data="editData" @save="onSave"></modalform>
-      <modalparticipants v-if="selectedGelombang != null" id_gelombang="selectedGelombang" @hide="selectedGelombang=null" ></modalparticipants>
       <div class="shadow rounded bg-white overflow-hidden">
         <div class="p-5 bg-yellow-200 border-b border-yellow-500 text-yellow-800">
           <ul class="flex divide-x divide-yellow-600 a">
             <li class="px-3 uppercase cursor-pointer hover:underline" @click="logout">LOGOUT</li>
-            <li class="px-3 uppercase font-bold">Kelola Gelombang</li>
+            <li class="px-3 uppercase font-bold">Data Pendaftaran</li>
           </ul>
         </div>
         <div class="p-5">
